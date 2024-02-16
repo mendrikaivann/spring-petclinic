@@ -26,10 +26,26 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh './mvnw compile -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true'
+                    sh 'mvn -B -DskipTests clean package -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
                 }
             }
         }
+	stage('Test') {
+	    steps {
+	        script {
+	            sh 'mvn test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
+	        }
+	    }
+	    post {
+	        always {
+	            junit 'target/surefire-reports/*.xml'
+	        }
+	    }
+	}
+
     }
 }
+
+
+
 
