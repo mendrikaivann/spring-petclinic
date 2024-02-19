@@ -23,25 +23,76 @@ pipeline {
                // }
            // }
        // }
-        stage('Build') {
+       // stage('Build') {
+           // steps {
+               // script {
+              //      sh 'mvn -B -DskipTests clean package -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
+            //    }
+          //  }
+        //}
+	//stage('Test') {
+	  //  steps {
+	       // script {
+	       //     sh 'mvn test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
+	     //   }
+	   // }
+	   // post {
+	       // always {
+	      //      junit 'target/surefire-reports/*.xml'
+	    //    }
+	  //  }
+	//}
+	stage('Build') {
             steps {
-                script {
-                    sh 'mvn -B -DskipTests clean package -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
+                withMaven(maven: 'mvnw') {
+                    script {
+                        // Configure Cache-Maven
+                        def mvnCache = new org.jenkinsci.plugins.maven.cache.MavenCache()
+
+                        // Use the cache for the compile step
+                        mvnCache.useCache {
+                            sh './mvnw compile -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+                        }
+                    }
                 }
             }
         }
-	stage('Test') {
-	    steps {
-	        script {
-	            sh 'mvn test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
-	        }
-	    }
+
+        stage('Test') {
+            steps {
+                withMaven(maven: 'mvnw') {
+                    script {
+                        // Configure Cache-Maven
+                        def mvnCache = new org.jenkinsci.plugins.maven.cache.MavenCache()
+
+                        // Use the cache for the test step
+                        mvnCache.useCache {
+                            sh './mvnw test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+                        }
+                    }
+                }
+            }
 	    post {
-	        always {
-	            junit 'target/surefire-reports/*.xml'
-	        }
-	    }
-	}
+        	always {
+            	    junit 'target/surefire-reports/*.xml'
+      		}
+    	    }
+        }
+	stage('Quality') {
+            steps {
+                script {
+                    docker.image('codeclimate/codeclimate').inside {
+                        sh 'mkdir codequality-results'
+                        sh 'codeclimate analyze -f html > ./codequality-results/index.html'
+                    }
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'codequality-results/*'
+                }
+            }
+        }
 
     }
 }
