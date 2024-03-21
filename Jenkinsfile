@@ -73,10 +73,10 @@ pipeline {
                 }
             }
 	    post {
-        	always {
-            	    junit 'target/surefire-reports/*.xml'
-      		}
-    	    }
+		always {
+		    junit 'target/surefire-reports/*.xml'
+		}
+	    }
         }
 	stage('Quality') {
             steps {
@@ -90,6 +90,17 @@ pipeline {
             post {
                 always {
                     archiveArtifacts artifacts: 'codequality-results/*'
+                }
+            }
+        }
+	stage('Package') {
+            steps {
+                script {
+                    docker.withRegistry('https://hub.docker.com', 'ivann77','17MenSar321!!') { // Replace with your registry URL and credentials
+                        sh './mvnw install -PbuildDocker -DskipTests=true -DpushImage -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true'
+                        sh 'docker compose build'
+                        sh 'docker compose push'
+                    }
                 }
             }
         }
