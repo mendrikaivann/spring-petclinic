@@ -23,61 +23,61 @@ pipeline {
                // }
            // }
        // }
-       // stage('Build') {
-           // steps {
-               // script {
-              //      sh 'mvn -B -DskipTests clean package -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
-            //    }
-          //  }
-        //}
-	//stage('Test') {
-	  //  steps {
-	       // script {
-	       //     sh 'mvn test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
-	     //   }
-	   // }
-	   // post {
-	       // always {
-	      //      junit 'target/surefire-reports/*.xml'
-	    //    }
-	  //  }
-	//}
-	stage('Build') {
+        stage('Build') {
             steps {
-                withMaven(maven: 'mvnw') {
-                    script {
+                script {
+                    sh 'mvn -B -DskipTests clean package -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
+                }
+            }
+        }
+	stage('Test') {
+	    steps {
+	        script {
+	            sh 'mvn test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version'
+	        }
+	    }
+	    post {
+	        always {
+	            junit 'target/surefire-reports/*.xml'
+	        }
+	    }
+	}
+//	stage('Build') {
+        //    steps {
+      //          withMaven(maven: 'mvnw') {
+                   // script {
                         // Configure Cache-Maven
-                        def mvnCache = new MavenCache()
+                    //    def mvnCache = new MavenCache()
 
                         // Use the cache for the compile step
-                        mvnCache.useCache {
-                            sh './mvnw compile -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
-                        }
-                    }
-                }
-            }
-        }
+                  //      mvnCache.useCache {
+                 /           sh './mvnw compile -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+               //         }
+             //       }
+           //     }
+         //   }
+       // }
 
-        stage('Test') {
-            steps {
-                withMaven(maven: 'mvnw') {
-                    script {
+       // stage('Test') {
+           // steps {
+               // withMaven(maven: 'mvnw') {
+                //    script {
                         // Configure Cache-Maven
-                        def mvnCache = new org.jenkinsci.plugins.maven.cache.MavenCache()
+                      //  def mvnCache = new org.jenkinsci.plugins.maven.cache.MavenCache()
 
                         // Use the cache for the test step
-                        mvnCache.useCache {
-                            sh './mvnw test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
-                        }
-                    }
-                }
-            }
-	    post {
-		always {
-		    junit 'target/surefire-reports/*.xml'
-		}
-	    }
-        }
+                     //   mvnCache.useCache {
+                   //         sh './mvnw test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+                 //       }
+               //     }
+             //   }
+           // }
+	  //  post {
+	//	always {
+	//	    junit 'target/surefire-reports/*.xml'
+	//	}
+	  //  }
+        //}
 	stage('Quality') {
             steps {
                 script {
