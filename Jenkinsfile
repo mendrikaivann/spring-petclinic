@@ -26,14 +26,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'mvn compile -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+                    sh 'mvn compile'
                 }
             }
         }
 	stage('Test') {
 	    steps {
 	        script {
-	            sh 'mvn test -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+	            sh 'mvn test' //-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version
 	        }
 	    }
 	    post {
