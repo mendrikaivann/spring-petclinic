@@ -51,7 +51,7 @@ pipeline {
 
                         // Use the cache for the compile step
                   //      mvnCache.useCache {
-                 //           sh './mvnw compile -Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+                 //           sh './mvnw compile -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
                //         }
              //       }
            //     }
