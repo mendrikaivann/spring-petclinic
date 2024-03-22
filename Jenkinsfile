@@ -26,7 +26,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'mvn -B -DskipTests clean package -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+                    sh 'mvn compile -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
                 }
             }
         }
