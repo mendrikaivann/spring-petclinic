@@ -47,7 +47,7 @@ pipeline {
                 withMaven(maven: 'mvnw') {
                     script {
                         // Configure Cache-Maven
-                        def mvnCache = new org.jenkinsci.plugins.maven.cache.MavenCache()
+                        def mvnCache = new MavenCache()
 
                         // Use the cache for the compile step
                         mvnCache.useCache {
