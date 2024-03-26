@@ -33,7 +33,7 @@ pipeline {
 	stage('Test') {
 	    steps {
 	        script {
-	            sh 'mvn test -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true --batch-mode --show-version'
+	            sh 'mvn test -Djava.awt.headless=true --batch-mode --show-version'
 	        }
 	    }
 	    post {
