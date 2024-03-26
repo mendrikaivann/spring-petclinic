@@ -26,14 +26,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'mvn compile -Dmaven.repo.local=$WORKSPACE/.m2/repository'
+                    sh './mvnw compile'
                 }
             }
         }
 	stage('Test') {
 	    steps {
 	        script {
-	            sh 'mvn test -Dmaven.repo.local=$WORKSPACE/.m2/repository -Dorg.slf4j.simpleLogger.showDateTime=true  -Djava.awt.headless=true --batch-mode --show-version'
+	            sh 'mvn test -Dorg.slf4j.simpleLogger.showDateTime=true  -Djava.awt.headless=true --batch-mode --show-version'
 	        }
 	    }
 	    post {
