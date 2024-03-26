@@ -26,7 +26,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh './mvnw compile'
+                    sh 'mvn compile'
                 }
             }
         }
