@@ -81,7 +81,7 @@ pipeline {
 	stage('Quality') {
             steps {
                 script {
-                    docker.image('codeclimate/codeclimate').inside {
+                    docker.image('codeclimate').inside {
                         sh 'mkdir codequality-results'
                         sh 'codeclimate analyze -f html > ./codequality-results/index.html'
                     }
