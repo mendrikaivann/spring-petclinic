@@ -78,20 +78,31 @@ pipeline {
 	//	}
 	  //  }
         //}
+	//codeclimate url:https://codeclimate.com/profile/tokens
+	//codeclimate token:37a7926026e1ee5d4e0fb41e61e611dba3f772a1
+	//url git:
 	stage('Quality') {
             steps {
-                script {
-                    docker.image('codeclimate').inside {
-                        sh 'mkdir codequality-results'
-                        sh 'codeclimate analyze -f html > ./codequality-results/index.html'
-                    }
-                }
+		pipelineUtilitySteps {
+		    codeclimate(
+			token: 37a7926026e1ee5d4e0fb41e61e611dba3f772a1,
+			repoUrl: https://github.com/mendrikaivann/spring-petclinic.git,
+			generateHtmlReport: true,
+			generateJsonReport: true
+		    )
+		}
+                //script {
+                  //  docker.image('codeclimate').inside {
+                    //    sh 'mkdir codequality-results'
+                      //  sh 'codeclimate analyze -f html > ./codequality-results/index.html'
+                   // }
+               // }
             }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'codequality-results/*'
-                }
-            }
+            //post {
+              //  always {
+                //    archiveArtifacts artifacts: 'codequality-results/*'
+               // }
+           // }
         }
 	stage('Package') {
             steps {
