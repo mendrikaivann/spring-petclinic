@@ -83,14 +83,20 @@ pipeline {
 	//url git:
 	stage('Quality') {
             steps {
-		pipelineUtilitySteps {
-		    codeclimate(
-			token: '37a7926026e1ee5d4e0fb41e61e611dba3f772a1',
-			repoUrl: 'https://github.com/mendrikaivann/spring-petclinic.git',
-			generateHtmlReport: true,
-			generateJsonReport: true
-		    )
+		script {
+		    sh '''
+	 	    codeclimate analyze --token '37a7926026e1ee5d4e0fb41e61e611dba3f772a1' --repo-url 'https://github.com/mendrikaivann/spring-petclinic.git'
+		    codeclimate format-coverage --output > coverage.html
+		    '''
 		}
+		//pipelineUtilitySteps {
+		  //  codeclimate(
+		//	token: '37a7926026e1ee5d4e0fb41e61e611dba3f772a1',
+		//	repoUrl: 'https://github.com/mendrikaivann/spring-petclinic.git',
+		//	generateHtmlReport: true,
+		//	generateJsonReport: true
+		  //  )
+		//}
                 //script {
                   //  docker.image('codeclimate').inside {
                     //    sh 'mkdir codequality-results'
