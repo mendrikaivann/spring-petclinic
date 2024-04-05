@@ -84,9 +84,12 @@ pipeline {
 	stage('Quality') {
             steps {
 		script {
-	 	    docker run codeclimate/codeclimate analyze --token '37a7926026e1ee5d4e0fb41e61e611dba3f772a1' --repo-url 'https://github.com/mendrikaivann/spring-petclinic.git'
+		    sh '''
+		    docker run codeclimate/codeclimate analyze --token '37a7926026e1ee5d4e0fb41e61e611dba3f772a1' --repo-url 'https://github.com/mendrikaivann/spring-petclinic.git'
 		    docker run codeclimate/codeclimate format-coverage --output > coverage.html
+		    '''
 		}
+	    }
 		//pipelineUtilitySteps {
 		  //  codeclimate(
 		//	token: '37a7926026e1ee5d4e0fb41e61e611dba3f772a1',
@@ -101,7 +104,7 @@ pipeline {
                       //  sh 'codeclimate analyze -f html > ./codequality-results/index.html'
                    // }
                // }
-            }
+           // }
             //post {
               //  always {
                 //    archiveArtifacts artifacts: 'codequality-results/*'
